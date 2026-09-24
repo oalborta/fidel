@@ -3,8 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title id="pwa-title">Club de Fidelización</title>
+  <title id="pwa-title">Mi Tarjeta Digital</title>
   
+  <!-- Soporte PWA pantalla completa -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -12,6 +13,7 @@
 
   <link id="dynamic-favicon" rel="icon" type="image/png" href="">
   <link id="dynamic-apple-icon" rel="apple-touch-icon" href="">
+  <link id="dynamic-manifest" rel="manifest">
 
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -21,47 +23,52 @@
 </head>
 <body>
 
-  <iframe 
-    id="app-frame" 
-    src="" 
-    allow="clipboard-write"
-    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals">
-  </iframe>
+  <iframe id="app-frame" src="" allow="clipboard-write"></iframe>
 
   <script>
-    // 1. URL base estricta (sin barra final después de exec)
     const APPS_SCRIPT_BASE_URL = "https://script.google.com/macros/s/AKfycbzv35IzsSI86saKvk0F-1k1BV6XtLOGtL-dlpUmjwdBTPJhdyFvu39WvI7-g-T-t6u-/exec";
 
-    // 2. Diccionario de marcas
     const BRAND_ICONS = {
       "MACCHIA": "https://lh3.googleusercontent.com/d/1WzFb7rEBFlYu3sQGGo2o_yRq5u8lcNbG",
       "ANDALE": "https://lh3.googleusercontent.com/d/1GICfcXVVYJUcIdmXHmYmB6XFHsvvSK74"
     };
 
-    // 3. Captura parámetros
     const urlParams = new URLSearchParams(window.location.search);
     const biz = (urlParams.get('biz') || 'MACCHIA').toUpperCase();
-    const cli = urlParams.get('cli') || '';
+    const currentUrl = window.location.href;
+    const titleText = "Club " + biz;
 
-    // 4. Íconos
+    document.getElementById('pwa-title').innerText = titleText;
+
     const iconUrl = BRAND_ICONS[biz] || "";
     if (iconUrl) {
       document.getElementById('dynamic-favicon').href = iconUrl;
       document.getElementById('dynamic-apple-icon').href = iconUrl;
     }
-    if (biz) {
-      document.getElementById('pwa-title').innerText = "Club " + biz;
-    }
 
-    // 5. Armar URL destino limpia
-    let targetUrl = APPS_SCRIPT_BASE_URL;
-    if (window.location.search) {
-      targetUrl += window.location.search;
-    } else {
-      targetUrl += "?biz=" + encodeURIComponent(biz) + (cli ? "&cli=" + encodeURIComponent(cli) : "");
-    }
+    // Inyectar manifiesto dinámico con la URL completa del cliente como start_url
+    const manifestObj = {
+      name: titleText,
+      short_name: biz,
+      start_url: currentUrl,
+      display: "standalone",
+      background_color: "#0f172a",
+      theme_color: "#0f172a",
+      icons: iconUrl ? [
+        {
+          src: iconUrl,
+          sizes: "192x192 512x512",
+          type: "image/png",
+          purpose: "any maskable"
+        }
+      ] : []
+    };
 
-    document.getElementById('app-frame').src = targetUrl;
+    const manifestBlob = new Blob([JSON.stringify(manifestObj)], { type: 'application/json' });
+    document.getElementById('dynamic-manifest').href = URL.createObjectURL(manifestBlob);
+
+    // Cargar iframe
+    document.getElementById('app-frame').src = APPS_SCRIPT_BASE_URL + window.location.search;
   </script>
 
 </body>
