@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title id="pwa-title">Mi Tarjeta Digital</title>
   
-  <!-- Soporte PWA pantalla completa -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -28,9 +27,10 @@
   <script>
     const APPS_SCRIPT_BASE_URL = "https://script.google.com/macros/s/AKfycbzv35IzsSI86saKvk0F-1k1BV6XtLOGtL-dlpUmjwdBTPJhdyFvu39WvI7-g-T-t6u-/exec";
 
+    // Reemplaza el ID de ANDALE por el ID real del sello (no el de la trama)
     const BRAND_ICONS = {
       "MACCHIA": "https://lh3.googleusercontent.com/d/1WzFb7rEBFlYu3sQGGo2o_yRq5u8lcNbG",
-      "ANDALE": "https://lh3.googleusercontent.com/d/1GICfcXVVYJUcIdmXHmYmB6XFHsvvSK74"
+      "ANDALE": "https://lh3.googleusercontent.com/d/https://lh3.googleusercontent.com/d/1-Hu6YV9Kq_V7kPmN3ScWYEjI-c52OWJs"
     };
 
     const urlParams = new URLSearchParams(window.location.search);
@@ -46,7 +46,7 @@
       document.getElementById('dynamic-apple-icon').href = iconUrl;
     }
 
-    // Inyectar manifiesto dinámico con la URL completa del cliente como start_url
+    // Configuración optimizada para evitar recortes agresivos en el ícono
     const manifestObj = {
       name: titleText,
       short_name: biz,
@@ -59,7 +59,7 @@
           src: iconUrl,
           sizes: "192x192 512x512",
           type: "image/png",
-          purpose: "any maskable"
+          purpose: "any"
         }
       ] : []
     };
@@ -67,7 +67,7 @@
     const manifestBlob = new Blob([JSON.stringify(manifestObj)], { type: 'application/json' });
     document.getElementById('dynamic-manifest').href = URL.createObjectURL(manifestBlob);
 
-    // Cargar iframe
+    // Carga de la tarjeta
     document.getElementById('app-frame').src = APPS_SCRIPT_BASE_URL + window.location.search;
   </script>
 
