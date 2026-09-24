@@ -3,13 +3,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Mi Tarjeta Digital</title>
+  <title id="pwa-title">Mi Tarjeta Digital</title>
   
-  <!-- Configuración para PWA limpia en pantalla completa -->
+  <!-- Soporte para PWA en pantalla completa -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#0f172a">
+
+  <!-- Íconos dinámicos para pantalla de inicio -->
+  <link id="dynamic-favicon" rel="icon" type="image/png" href="">
+  <link id="dynamic-apple-icon" rel="apple-touch-icon" href="">
 
   <style>
     * {
@@ -36,15 +40,35 @@
   <iframe id="app-frame" src="" allow="clipboard-write"></iframe>
 
   <script>
-    // URL base de tu Google Apps Script (/exec)
-    const APPS_SCRIPT_BASE_URL = "https://script.google.com/macros/s/AKfycbzyCg7eR5XylTLbQ32l9XgYA82OTT8AiULB-M2-CXBKg8iup1S_ZEIx2SyzbHp-p1pz/exec";
+    // 1. URL base de tu Google Apps Script (/exec)
+    const APPS_SCRIPT_BASE_URL = "PEGA_AQUI_TU_URL_EXEC";
 
-    // Captura los parámetros que vengan en GitHub (?biz=...&cli=...)
+    // 2. Diccionario de sellos por marca (puedes agregar los IDs de cada negocio)
+    // Coloca la URL directa lh3 de Google Drive o web del sello/logo de cada negocio
+    const BRAND_ICONS = {
+      "MACCHIA": "https://lh3.googleusercontent.com/d/TU_ID_SELLO_MACCHIA",
+      // "OTRONEGOCIO": "https://lh3.googleusercontent.com/d/..."
+    };
+
+    // 3. Capturar parámetros de la URL (?biz=MACCHIA&cli=CLI-XXXX)
+    const urlParams = new URLSearchParams(window.location.search);
+    const biz = (urlParams.get('biz') || 'MACCHIA').toUpperCase();
+
+    // 4. Asignar el ícono correspondiente al sello de la marca
+    const iconUrl = BRAND_ICONS[biz] || "";
+
+    if (iconUrl) {
+      document.getElementById('dynamic-favicon').href = iconUrl;
+      document.getElementById('dynamic-apple-icon').href = iconUrl;
+    }
+
+    if (biz) {
+      document.getElementById('pwa-title').innerText = "Club " + biz;
+    }
+
+    // 5. Cargar el iframe limpio
     const currentParams = window.location.search;
-
-    // Concatena y carga la tarjeta limpia dentro del marco
-    const targetUrl = APPS_SCRIPT_BASE_URL + currentParams;
-    document.getElementById('app-frame').src = targetUrl;
+    document.getElementById('app-frame').src = APPS_SCRIPT_BASE_URL + currentParams;
   </script>
 
 </body>
