@@ -40,21 +40,20 @@
   <iframe id="app-frame" src="" allow="clipboard-write"></iframe>
 
   <script>
-    // 1. URL base de tu Google Apps Script (/exec)
+  // 1. URL base de tu Google Apps Script (/exec)
     const APPS_SCRIPT_BASE_URL = "PEGA_AQUI_TU_URL_EXEC";
 
-    // 2. Diccionario de sellos por marca (puedes agregar los IDs de cada negocio)
-    // Coloca la URL directa lh3 de Google Drive o web del sello/logo de cada negocio
+    // 2. Diccionario de sellos por marca (URLs limpias)
     const BRAND_ICONS = {
-      "MACCHIA": "https://lh3.googleusercontent.com/d/TU_ID_SELLO_MACCHIA",
-      // "OTRONEGOCIO": "https://lh3.googleusercontent.com/d/..."
+      "MACCHIA": "https://lh3.googleusercontent.com/d/1WzFb7rEBFlYu3sQGGo2o_yRq5u8lcNbG",
+      "ANDALE": "https://lh3.googleusercontent.com/d/1GICfcXVVYJUcIdmXHmYmB6XFHsvvSK74"
     };
 
-    // 3. Capturar parámetros de la URL (?biz=MACCHIA&cli=CLI-XXXX)
+    // 3. Capturar parámetros dinámicamente de la URL
     const urlParams = new URLSearchParams(window.location.search);
     const biz = (urlParams.get('biz') || 'MACCHIA').toUpperCase();
 
-    // 4. Asignar el ícono correspondiente al sello de la marca
+    // 4. Asignar el ícono correspondiente al sello de la marca detectada
     const iconUrl = BRAND_ICONS[biz] || "";
 
     if (iconUrl) {
