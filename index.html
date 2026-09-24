@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title id="pwa-title">Mi Tarjeta Digital</title>
+  <title id="pwa-title">Club de Fidelización</title>
   
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -21,23 +21,29 @@
 </head>
 <body>
 
-  <iframe id="app-frame" src="" allow="clipboard-write"></iframe>
+  <iframe 
+    id="app-frame" 
+    src="" 
+    allow="clipboard-write"
+    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals">
+  </iframe>
 
   <script>
-    // 1. Pega aquí tu URL /exec de Google Apps Script
-    const APPS_SCRIPT_BASE_URL = "https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycbzv35IzsSI86saKvk0F-1k1BV6XtLOGtL-dlpUmjwdBTPJhdyFvu39WvI7-g-T-t6u-/exec";
+    // 1. URL base estricta (sin barra final después de exec)
+    const APPS_SCRIPT_BASE_URL = "https://script.google.com/macros/s/AKfycbzv35IzsSI86saKvk0F-1k1BV6XtLOGtL-dlpUmjwdBTPJhdyFvu39WvI7-g-T-t6u-/exec";
 
-    // 2. Diccionario de marcas e imágenes de sellos
+    // 2. Diccionario de marcas
     const BRAND_ICONS = {
       "MACCHIA": "https://lh3.googleusercontent.com/d/1WzFb7rEBFlYu3sQGGo2o_yRq5u8lcNbG",
       "ANDALE": "https://lh3.googleusercontent.com/d/1GICfcXVVYJUcIdmXHmYmB6XFHsvvSK74"
     };
 
-    // 3. Capturar parámetros
+    // 3. Captura parámetros
     const urlParams = new URLSearchParams(window.location.search);
     const biz = (urlParams.get('biz') || 'MACCHIA').toUpperCase();
+    const cli = urlParams.get('cli') || '';
 
-    // 4. Asignar ícono según negocio
+    // 4. Íconos
     const iconUrl = BRAND_ICONS[biz] || "";
     if (iconUrl) {
       document.getElementById('dynamic-favicon').href = iconUrl;
@@ -47,9 +53,15 @@
       document.getElementById('pwa-title').innerText = "Club " + biz;
     }
 
-    // 5. Cargar la tarjeta en el iframe
-    const currentParams = window.location.search;
-    document.getElementById('app-frame').src = APPS_SCRIPT_BASE_URL + currentParams;
+    // 5. Armar URL destino limpia
+    let targetUrl = APPS_SCRIPT_BASE_URL;
+    if (window.location.search) {
+      targetUrl += window.location.search;
+    } else {
+      targetUrl += "?biz=" + encodeURIComponent(biz) + (cli ? "&cli=" + encodeURIComponent(cli) : "");
+    }
+
+    document.getElementById('app-frame').src = targetUrl;
   </script>
 
 </body>
