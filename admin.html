@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Spike - Caja & Admin</title>const SPIKE_IMG = https://github.com/oalborta/fidel/blob/main/SPIKE_ICON.png?raw=true
+  <title>Spike - Caja & Admin</title>
   
   <!-- Configuración de App en pantalla completa -->
   <meta name="mobile-web-app-capable" content="yes">
@@ -24,7 +24,7 @@
 </head>
 <body>
 
-  <!-- Iframe con los permisos necesarios para login y clipboard -->
+  <!-- Iframe para login y operaciones -->
   <iframe 
     id="app-frame" 
     src="" 
@@ -32,17 +32,17 @@
   </iframe>
 
   <script>
-    // 1. URL base de tu Google Apps Script (/exec)
+    // 1. URL de Google Apps Script (/exec)
     const APPS_SCRIPT_EXEC_URL = "https://script.google.com/macros/s/AKfycbzv35IzsSI86saKvk0F-1k1BV6XtLOGtL-dlpUmjwdBTPJhdyFvu39WvI7-g-T-t6u-/exec";
 
-    // 2. Enlace de la foto de Spike (reemplaza con tu URL real de la foto)
-    const SPIKE_IMG = "https://oalborta.github.io/fidel/spike.png"; 
+    // 2. Imagen de Spike en tu repositorio
+    const SPIKE_IMG = "https://oalborta.github.io/fidel/SPIKE_ICON.png";
 
-    // Configurar íconos en la página
+    // Asignar íconos
     document.getElementById('spike-favicon').href = SPIKE_IMG;
     document.getElementById('spike-apple').href = SPIKE_IMG;
 
-    // Crear manifiesto para que Android lo instale como app con el rostro de Spike
+    // Crear manifiesto para instalación como app
     const manifestObj = {
       name: "Spike - Caja",
       short_name: "Spike",
@@ -63,7 +63,7 @@
     const manifestBlob = new Blob([JSON.stringify(manifestObj)], { type: 'application/json' });
     document.getElementById('spike-manifest').href = URL.createObjectURL(manifestBlob);
 
-    // Cargar el sistema de Apps Script
+    // Cargar la terminal de caja
     document.getElementById('app-frame').src = APPS_SCRIPT_EXEC_URL;
   </script>
 
