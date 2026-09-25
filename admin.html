@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Spike - Caja & Admin</title>const SPIKE_IMG =
+  
+  <!-- Configuración de App en pantalla completa -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#0f172a">
+
+  <!-- Íconos de Spike para el celular -->
+  <link id="spike-favicon" rel="icon" type="image/png" href="">
+  <link id="spike-apple" rel="apple-touch-icon" href="">
+  <link id="spike-manifest" rel="manifest">
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background-color: #0f172a; }
+    iframe { width: 100%; height: 100%; border: none; display: block; }
+  </style>
+</head>
+<body>
+
+  <!-- Iframe con los permisos necesarios para login y clipboard -->
+  <iframe 
+    id="app-frame" 
+    src="" 
+    allow="clipboard-write">
+  </iframe>
+
+  <script>
+    // 1. URL base de tu Google Apps Script (/exec)
+    const APPS_SCRIPT_EXEC_URL = "https://script.google.com/macros/s/AKfycbzv35IzsSI86saKvk0F-1k1BV6XtLOGtL-dlpUmjwdBTPJhdyFvu39WvI7-g-T-t6u-/exec";
+
+    // 2. Enlace de la foto de Spike (reemplaza con tu URL real de la foto)
+    const SPIKE_IMG = "https://oalborta.github.io/fidel/spike.png"; 
+
+    // Configurar íconos en la página
+    document.getElementById('spike-favicon').href = SPIKE_IMG;
+    document.getElementById('spike-apple').href = SPIKE_IMG;
+
+    // Crear manifiesto para que Android lo instale como app con el rostro de Spike
+    const manifestObj = {
+      name: "Spike - Caja",
+      short_name: "Spike",
+      start_url: window.location.href,
+      display: "standalone",
+      background_color: "#0f172a",
+      theme_color: "#0f172a",
+      icons: [
+        {
+          src: SPIKE_IMG,
+          sizes: "192x192 512x512",
+          type: "image/png",
+          purpose: "any"
+        }
+      ]
+    };
+
+    const manifestBlob = new Blob([JSON.stringify(manifestObj)], { type: 'application/json' });
+    document.getElementById('spike-manifest').href = URL.createObjectURL(manifestBlob);
+
+    // Cargar el sistema de Apps Script
+    document.getElementById('app-frame').src = APPS_SCRIPT_EXEC_URL;
+  </script>
+
+</body>
+</html>
